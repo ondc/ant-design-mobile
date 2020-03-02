@@ -25,7 +25,7 @@ subtitle: 文本输入
 | editable    | 是否可编辑        | bool |  true  |
 | disabled    | 是否禁用        | bool |  false  |
 | clear      |  是否带清除功能(仅`editable`为`true`,`disabled`为`false`才生效) | bool | false  |
-| maxLength      |  最大长度      | number |  无  |
+| maxLength      |  最大长度      | number |  无。除money类型外，仅当text, email, search, password, tel, or url 有效。具体可以查看文档 https://developer.mozilla.org/zh-TW/docs/Web/HTML/Element/input，以及相关issue https://github.com/ant-design/ant-design-mobile/issues/2966  |
 | onChange    | change 事件触发的回调函数 | (val: string): void |  -  |
 | onBlur     | blur 事件触发的回调函数 | (val: string): void |   -  |
 | onFocus    | focus 事件触发的回调函数 | (val: string): void |  -  |
@@ -40,9 +40,16 @@ subtitle: 文本输入
 | name    | input 的 name        | String |  无  |
 | moneyKeyboardAlign    | 文字排版起始方向, 只有 `type='money'` 支持， 可选为 `'left'`, `'right'`       | String |  'right'  |
 | moneyKeyboardWrapProps    | 自定义金额虚拟键盘属性  | Object | {} |
+| moneyKeyboardHeader    | 自定义金额虚拟键盘头部  | ReactNode | null |
 | locale   | 国际化，可覆盖全局`[LocaleProvider](https://mobile.ant.design/components/locale-provider)`的配置, 当`type`为`money`，可以自定义确认按钮的文案。 | Object: { confirmLabel } |  无 |
+| autoAdjustHeight   | 防止输入框被键盘遮挡。(仅 `type=money`时有效) | bool |  false |
+| disabledKeys   | 禁用部分数字按键(仅 `type=money`时有效) | array | null |  null |
 
+> 注意: 不要在受控组件的 `onChange` 事件中异步设置 `value`，否则中文输入可能带来问题，[相关问题参考](https://github.com/facebook/react/issues/3926)。
+>
 > 注意: `InputItem` 当 `type=number` 时不支持输入负号, 你可以利用 `type=text` 来自己实现。
+>
+> 注意: 使用 `moneyKeyboardHeader` 时，页面中只能有一个 `type=money` 的 `InputItem`。
 
 ## InputItem methods
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 export interface ModalPropsType<T> {
   title?: React.ReactNode;
   visible: boolean;
@@ -17,7 +17,7 @@ export interface ModalPropsType<T> {
 
 export interface Action<T> {
   text: string;
-  onPress?: () => void | Promise<any>;
+  onPress?: (...args: any[]) => void | Promise<any>;
   style?: T | string;
 }
 

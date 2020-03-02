@@ -56,7 +56,8 @@ module.exports = {
     // dev 环境下统一不 external
     // 因为 preact/devtools 未提供 umd
     if (!isDev) {
-      config.externals = Object.assign(config.externals, prodExternals);
+      console.log(prodExternals);
+      // config.externals = Object.assign(config.externals, prodExternals);
     } else {
       config.devtool = 'source-map';
     }

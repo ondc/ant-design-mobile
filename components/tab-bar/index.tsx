@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import getDataAttr from '../_util/getDataAttr';
 import Tabs from '../tabs';
 import { TabBarItemProps, TabBarProps } from './PropsType';
@@ -45,11 +45,15 @@ class AntTabBar extends React.Component<AntTabbarProps, any> {
   public static Item = Item;
 
   getTabs = () => {
-    return React.Children.map(this.props.children, (c: any) => {
-      return {
-        ...(c.props as TabBarItemProps),
-      };
+    const tabs = [] as TabBarItemProps[];
+    React.Children.forEach(this.props.children, (c: any) => {
+      if (c) {
+        tabs.push({
+          ...(c.props as TabBarItemProps),
+        });
+      }
     });
+    return tabs;
   }
 
   renderTabBar = () => {
@@ -63,7 +67,7 @@ class AntTabBar extends React.Component<AntTabbarProps, any> {
     } = this.props;
     const tabsData = this.getTabs();
 
-    const content = tabsData.map((cProps, index) => {
+    const content = Array.isArray(tabsData) ? tabsData.map((cProps, index) => {
       return (
         <Tab
           key={index}
@@ -80,7 +84,7 @@ class AntTabBar extends React.Component<AntTabbarProps, any> {
           onClick={() => cProps.onPress && cProps.onPress()}
         />
       );
-    });
+    }) : null;
     let cls = `${prefixCls}-bar`;
     if (hidden) {
       cls += ` ${prefixCls}-bar-hidden-${tabBarPosition}`;
@@ -105,11 +109,13 @@ class AntTabBar extends React.Component<AntTabbarProps, any> {
     } = this.props;
     const tabs = this.getTabs();
     let activeIndex = 0;
-    tabs.forEach((tab, index) => {
-      if (tab.selected) {
-        activeIndex = index;
-      }
-    });
+    if (Array.isArray(tabs)) {
+      tabs.forEach((tab, index) => {
+        if (tab.selected) {
+          activeIndex = index;
+        }
+      });
+    }
 
     return (
       <div className={prefixCls}>

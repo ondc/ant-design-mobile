@@ -1,10 +1,10 @@
 import classnames from 'classnames';
-import React from 'react';
+import * as React from 'react';
 import { FlexPropsType as BasePropsType } from './PropsType';
 
 export interface FlexProps extends BasePropsType {
   alignContent?: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch';
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   prefixCls?: string;
   className?: string;
   role?: string;

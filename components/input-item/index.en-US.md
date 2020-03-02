@@ -24,7 +24,7 @@ Properties | Description | Type | Default
 | editable    | whether is editable        | bool |  true  |
 | disabled    | whether is disabled       | bool |  false  |
 | clear      |  whether to display clear(it takes effect only `editable` is `true` and `disabled` is `false` has been set) | bool | false  |
-| maxLength      |  limits the maximum number of characters that can be entered      | number |    |
+| maxLength      |  limits the maximum number of characters that can be entered      | number |  valid for "text, email, search, password, tel, or url" . https://developer.mozilla.org/zh-TW/docs/Web/HTML/Element/input, https://github.com/ant-design/ant-design-mobile/issues/2966 |
 | onChange    | callback that is called when the text input's text changes | (val: string): void |  -  |
 | onBlur     | callback that is called when the text input is blurred | (val: string): void |   -  |
 | onFocus    | callback that is called when the text input is focused | (val: string): void |  -  |
@@ -39,9 +39,16 @@ Properties | Description | Type | Default
 | name    | the name of input       | String |   |
 | moneyKeyboardAlign    | text align direction, only `type='money'` support this api， could be `'left'`, `'right'`       | String |  'right'  |
 | moneyKeyboardWrapProps    | custom money virtual keyboard props  | Object | {} |
-| locale   | 国际化，可覆盖全局`[LocaleProvider](https://mobile.ant.design/components/locale-provider)`的配置,  when`type`is`money`，can cunstom the keyboard confirm item's label | Object: { confirmLabel } |  无 |
+| moneyKeyboardHeader    | custom money virtual keyboard header  | ReactNode | null |
+| locale   | internationalization, can override `[LocaleProvider](https://mobile.ant.design/components/locale-provider)`,  when`type`is`money`，can cunstom the keyboard confirm item's label | Object: { confirmLabel } |   |
+| autoAdjustHeight   | prevent keyboard from covering input element.(only for `type=money`) | bool |  false |
+| disabledKeys   | disable some keyboard item (only for  `type=money`) | array | null |  null |
 
+> Note: Do not set `value` asynchronously in the `onChange` event of the controlled component, otherwise Chinese input may cause problems, [related issue](https://github.com/facebook/react/issues/3926).
+>
 > Note: `InputItem` does not support negative number if `type` is text, you can use `type=text` to do that.
+>
+> Note: When use `moneyKeyboardHeader`, only one `InputItem` which `type=money` is allowed on one page.
 
 ## InputItem Instance methods
 

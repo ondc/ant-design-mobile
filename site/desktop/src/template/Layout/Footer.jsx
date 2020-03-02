@@ -22,6 +22,9 @@ const Footer = () => (
               <a target="_blank" rel="noopener noreferrer" href="https://pro.ant.design">Ant Design Pro</a>
             </div>
             <div>
+              <a target="_blank" rel="noopener noreferrer" href="http://ng.mobile.ant.design">NG-ZORRO-MOBILE (Ant Design Mobile of Angular)</a>
+            </div>
+            <div>
               <a target="_blank" rel="noopener noreferrer" href="https://github.com/react-component">React Component GitHub</a>
             </div>
           </div>
@@ -50,7 +53,7 @@ const Footer = () => (
           <div className="footer-center">
             <h2><FormattedMessage id="app.footer.community" /></h2>
             <div>
-              <a target="_blank" rel="noopener noreferrer" href="https://gitter.im/ant-design/ant-design">
+              <a target="_blank" rel="noopener noreferrer" href="https://gitter.im/ant-design/ant-design-mobile">
                 <FormattedMessage id="app.footer.discuss" />
               </a>
             </div>

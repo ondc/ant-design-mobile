@@ -1,6 +1,6 @@
 import classnames from 'classnames';
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import TouchFeedback from 'rmc-feedback';
 import getDataAttr from '../_util/getDataAttr';
 import { getComponentLocale } from '../_util/getLocale';
@@ -164,6 +164,13 @@ export default class SearchBar extends React.Component<
       this.blurFromOnClear = false;
     });
     if (this.props.onBlur) {
+      // fix autoFocus item blur with flash
+      setTimeout(() => {
+        // fix ios12 wechat browser click failure after input
+        if (document.body) {
+          document.body.scrollTop = document.body.scrollTop;
+        }
+      },100);
       this.props.onBlur();
     }
   }

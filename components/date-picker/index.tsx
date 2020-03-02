@@ -1,6 +1,6 @@
 /* tslint:disable:jsx-no-multiline-js */
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 import RCDatePicker from 'rmc-date-picker/lib/DatePicker';
 import PopupDatePicker from 'rmc-date-picker/lib/Popup';
 import { getComponentLocale } from '../_util/getLocale';
@@ -85,7 +85,7 @@ export default class DatePicker extends React.Component<PropsType, any> {
      *
      */
 
-    const dataPicker = (
+    const datePicker = (
       <RCDatePicker
         minuteStep={props.minuteStep}
         locale={DatePickerLocale}
@@ -103,7 +103,7 @@ export default class DatePicker extends React.Component<PropsType, any> {
 
     return (
       <PopupDatePicker
-        datePicker={dataPicker}
+        datePicker={datePicker}
         WrapComponent="div"
         transitionName="am-slide-up"
         maskTransitionName="am-fade"
@@ -117,7 +117,7 @@ export default class DatePicker extends React.Component<PropsType, any> {
       >
         {children &&
           React.isValidElement(children) &&
-          React.cloneElement<object, object>(children, {
+          React.cloneElement<{extra?: string}>(children, {
             extra: value ? formatFn(this, value) : this.props.extra || extra,
           })}
       </PopupDatePicker>

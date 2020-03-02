@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 export interface LocaleProviderProps {
   locale: {
@@ -8,7 +8,6 @@ export interface LocaleProviderProps {
     DatePickerView?: object;
     InputItem?: object;
   };
-  children?: React.ReactElement<any>;
 }
 
 export default class LocaleProvider extends React.Component<

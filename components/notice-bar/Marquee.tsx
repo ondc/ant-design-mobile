@@ -4,12 +4,12 @@
  * support React Element for text prop
 */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 export interface MarqueeProps {
   prefixCls?: string;
-  text: string;
+  text?: string;
   loop?: boolean;
   leading?: number;
   trailing?: number;

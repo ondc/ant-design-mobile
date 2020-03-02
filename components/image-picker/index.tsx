@@ -1,6 +1,6 @@
 /* tslint:disable:no-bitwise */
 import classnames from 'classnames';
-import React from 'react';
+import * as React from 'react';
 import TouchFeedback from 'rmc-feedback';
 import Flex from '../flex';
 import { ImagePickerPropTypes as BasePropsType } from './PropsType';
@@ -26,6 +26,8 @@ export default class ImagePicker extends React.Component<
     selectable: true,
     multiple: false,
     accept: 'image/*',
+    length: 4,
+    disableDelete: false,
   };
 
   fileSelectorInput: HTMLInputElement | null;
@@ -116,9 +118,19 @@ export default class ImagePicker extends React.Component<
     const fileSelectorEl = this.fileSelectorInput;
     if (fileSelectorEl && fileSelectorEl.files && fileSelectorEl.files.length) {
       const files = fileSelectorEl.files;
+      const imageParsePromiseList = []
       for (let i = 0; i < files.length; i++) {
-        this.parseFile(files[i], i);
+        imageParsePromiseList.push(this.parseFile(files[i], i))
       }
+      Promise.all(imageParsePromiseList)
+        .then(imageItems => this.addImage(imageItems))
+        .catch(
+          error => {
+            if (this.props.onFail) {
+              this.props.onFail(error);
+            }
+          },
+        )
     }
     if (fileSelectorEl) {
       fileSelectorEl.value = '';
@@ -126,30 +138,30 @@ export default class ImagePicker extends React.Component<
   }
 
   parseFile = (file: any, index: number) => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const dataURL = (e.target as any).result;
-      if (!dataURL) {
-        if (this.props.onFail) {
-          this.props.onFail(`Fail to get the ${index} image`);
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const dataURL = (e.target as any).result;
+        if (!dataURL) {
+          reject(`Fail to get the ${index} image`)
+          return;
         }
-        return;
-      }
 
-      let orientation = 1;
-      this.getOrientation(file, res => {
-        // -2: not jpeg , -1: not defined
-        if (res > 0) {
-          orientation = res;
-        }
-        this.addImage({
-          url: dataURL,
-          orientation,
-          file,
+        let orientation = 1;
+        this.getOrientation(file, res => {
+          // -2: not jpeg , -1: not defined
+          if (res > 0) {
+            orientation = res;
+          }
+          resolve({
+            url: dataURL,
+            orientation,
+            file,
+          })
         });
-      });
-    };
-    reader.readAsDataURL(file);
+      };
+      reader.readAsDataURL(file);
+    })
   }
   render() {
     const {
@@ -161,21 +173,32 @@ export default class ImagePicker extends React.Component<
       onAddImageClick,
       multiple,
       accept,
+      capture,
+      disableDelete,
     } = this.props;
 
     const imgItemList: any[] = [];
+    let count = parseInt('' + this.props.length, 10);
+    if (count <= 0) {
+      count = 4;
+    }
 
     const wrapCls = classnames(`${prefixCls}`, className);
 
     files.forEach((image: any, index: number) => {
       const imgStyle = {
-        backgroundImage: `url(${image.url})`,
+        backgroundImage: `url("${image.url}")`,
         transform: `rotate(${this.getRotation(image.orientation)}deg)`,
       };
+      const itemStyle = {};
+
       imgItemList.push(
-        <Flex.Item key={`item-${index}`}>
+        <Flex.Item
+          key={`item-${index}`}
+          style={itemStyle}
+        >
           <div key={index} className={`${prefixCls}-item`}>
-            <div
+            { !disableDelete && <div
               className={`${prefixCls}-item-remove`}
               role="button"
               aria-label="Click and Remove this image"
@@ -183,7 +206,7 @@ export default class ImagePicker extends React.Component<
               onClick={() => {
                 this.removeImage(index);
               }}
-            />
+            />}
             <div
               className={`${prefixCls}-item-content`}
               role="button"
@@ -217,6 +240,7 @@ export default class ImagePicker extends React.Component<
                 this.onFileChange();
               }}
               multiple={multiple}
+              capture={capture}
             />
           </div>
         </TouchFeedback>
@@ -225,8 +249,8 @@ export default class ImagePicker extends React.Component<
 
     let allEl = selectable ? imgItemList.concat([selectEl]) : imgItemList;
     const length = allEl.length;
-    if (length !== 0 && length % 4 !== 0) {
-      const blankCount = 4 - length % 4;
+    if (length !== 0 && length % count !== 0) {
+      const blankCount = count - length % count;
       const fillBlankEl: any[] = [];
       for (let i = 0; i < blankCount; i++) {
         fillBlankEl.push(<Flex.Item key={`blank-${i}`} />);
@@ -234,8 +258,8 @@ export default class ImagePicker extends React.Component<
       allEl = allEl.concat(fillBlankEl);
     }
     const flexEl: any[][] = [];
-    for (let i = 0; i < allEl.length / 4; i++) {
-      const rowEl = allEl.slice(i * 4, i * 4 + 4);
+    for (let i = 0; i < allEl.length / count; i++) {
+      const rowEl = allEl.slice(i * count, i * count + count);
       flexEl.push(rowEl);
     }
     const renderEl = flexEl.map((item, index) => (
